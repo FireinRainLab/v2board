@@ -28,6 +28,12 @@ class ClientController extends Controller
                     $file = 'App\\Protocols\\' . basename($file, '.php');
                     $class = new $file($user, $servers);
                     if (strpos($flag, $class->flag) !== false) {
+                        // TODO
+                        //进行hook处理，如果设置了环境遍历EnableWorkers
+                        //设置了才获取worker节点信息 注入到配置中
+                        //cf worker节点信息 以api的方式提供
+
+                        //节点信息字符串分两种 一直是yml字符串，一种是base64字符串
                         return $class->handle();
                     }
                 }
