@@ -111,6 +111,21 @@ class ClashMeta
         $array['cipher'] = $server['cipher'];
         $array['password'] = $password;
         $array['udp'] = true;
+        if ($server['obfs'] === 'http') {
+            $array['plugin'] = 'obfs';
+            $obfs_settings = $server['obfs_settings'];
+
+            $data = [
+                'mode' => 'http',
+                'host' => $obfs_settings['host'],  // 不进行 urlencode
+            ];
+
+            if (!empty($obfs_settings['path'])) {
+                $data['path'] = $obfs_settings['path'];  // 不进行 urlencode
+            }
+
+            $array['plugin-opts'] = $data;
+        }
         return $array;
     }
 

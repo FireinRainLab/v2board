@@ -108,6 +108,21 @@ class Stash
         $array['cipher'] = $server['cipher'];
         $array['password'] = $uuid;
         $array['udp'] = true;
+        if ($server['obfs'] === 'http') {
+            $array['plugin'] = 'obfs';
+            $obfs_settings = $server['obfs_settings'];
+
+            $data = [
+                'mode' => 'http',
+                'host' => $obfs_settings['host'],  // 不进行 urlencode
+            ];
+
+            if (!empty($obfs_settings['path'])) {
+                $data['path'] = $obfs_settings['path'];  // 不进行 urlencode
+            }
+
+            $array['plugin-opts'] = $data;
+        }
         return $array;
     }
 
@@ -231,7 +246,7 @@ class Stash
 
         return $array;
     }
-    
+
     public static function buildTrojan($password, $server)
     {
         $array = [];
@@ -279,7 +294,7 @@ class Stash
         $array['port'] = (int)$firstPort;
         if (count($parts) !== 1 || strpos($parts[0], '-') !== false) {
             $array['ports'] = $server['port'];
-            $array['mport'] = $server['port'];   
+            $array['mport'] = $server['port'];
         }
         $array['udp'] = true;
         $array['skip-cert-verify'] = $server['insecure'] == 1 ? true : false;

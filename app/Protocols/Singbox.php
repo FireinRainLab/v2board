@@ -116,7 +116,21 @@ class Singbox
         $array['server_port'] = $server['port'];
         $array['method'] = $server['cipher'];
         $array['password'] = $password;
+        if ($server['obfs'] === 'http') {
+                    $array['plugin'] = 'obfs';
+                    $obfs_settings = $server['obfs_settings'];
 
+                    $data = [
+                        'mode' => 'http',
+                        'host' => $obfs_settings['host'],  // 不进行 urlencode
+                    ];
+
+                    if (!empty($obfs_settings['path'])) {
+                        $data['path'] = $obfs_settings['path'];  // 不进行 urlencode
+                    }
+
+                    $array['plugin-opts'] = $data;
+        }
         return $array;
     }
 
@@ -242,7 +256,7 @@ class Singbox
         return $array;
     }
 
-    protected function buildTrojan($password, $server) 
+    protected function buildTrojan($password, $server)
     {
         $array = [];
         $array['tag'] = $server['name'];

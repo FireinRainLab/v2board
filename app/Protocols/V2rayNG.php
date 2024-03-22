@@ -57,6 +57,14 @@ class V2rayNG
             ['-', '_', ''],
             base64_encode("{$server['cipher']}:{$password}")
         );
+        if (!empty($server['obfs'])) {
+            $obfsSettings = is_string($server['obfs_settings']) ? json_decode($server['obfs_settings'], true) : $server['obfs_settings'];
+            $obfs = "plugin=obfs-local%3Bobfs={$server['obfs']}";
+            $obfs .= isset($obfsSettings['host']) ? "%3Bobfs-host={$obfsSettings['host']}" : '';
+            $obfs .= isset($obfsSettings['path']) ? "%3Bobfs-uri={$obfsSettings['path']}" : '%3Bobfs-uri=/';
+            return "ss://{$str}@{$server['host']}:{$server['port']}?plugin=obfs-local%3B{$obfs}#{$name}\r\n";
+
+        }
         return "ss://{$str}@{$server['host']}:{$server['port']}#{$name}\r\n";
     }
 
@@ -213,7 +221,7 @@ class V2rayNG
                 }
             }
         }
-        
+
         $uri .= "#{$name}\r\n";
         return $uri;
     }

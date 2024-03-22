@@ -111,6 +111,21 @@ class ClashVerge
         $array['cipher'] = $server['cipher'];
         $array['password'] = $password;
         $array['udp'] = true;
+        if ($server['obfs'] === 'http') {
+            $array['plugin'] = 'obfs';
+            $obfs_settings = $server['obfs_settings'];
+
+            $data = [
+                'mode' => 'http',
+                'host' => $obfs_settings['host'],  // 不进行 urlencode
+            ];
+
+            if (!empty($obfs_settings['path'])) {
+                $data['path'] = $obfs_settings['path'];  // 不进行 urlencode
+            }
+
+            $array['plugin-opts'] = $data;
+        }
         return $array;
     }
 
@@ -177,7 +192,7 @@ class ClashVerge
         $array['port'] = $server['port'];
         $array['uuid'] = $uuid;
         $array['udp'] = true;
-        
+
         if ($server['tls']) {
             $array['tls'] = true;
             $array['skip-cert-verify'] = isset($server['tls_settings']['allow_insecure']) && $server['tls_settings']['allow_insecure'] == 1 ? true : false;
@@ -282,7 +297,7 @@ class ClashVerge
         $array['port'] = (int)$firstPort;
         if (count($parts) !== 1 || strpos($parts[0], '-') !== false) {
             $array['ports'] = $server['port'];
-            $array['mport'] = $server['port'];   
+            $array['mport'] = $server['port'];
         }
         $array['udp'] = true;
         $array['skip-cert-verify'] = $server['insecure'] == 1 ? true : false;
