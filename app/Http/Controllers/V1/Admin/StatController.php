@@ -130,7 +130,8 @@ class StatController extends Controller
                     $statistics[$k]['server_name'] = $server['name'];
                 }
             }
-            $statistics[$k]['total'] = $statistics[$k]['total'] / 1073741824;
+            $total_data = $statistics[$k]['total'] / 1073741824;
+            $statistics[$k]['total'] = number_format($total_data, 3);
         }
         array_multisort(array_column($statistics, 'total'), SORT_DESC, $statistics);
         return [
@@ -170,7 +171,8 @@ class StatController extends Controller
                     $statistics[$k]['server_name'] = $server['name'];
                 }
             }
-            $statistics[$k]['total'] = $statistics[$k]['total'] / 1073741824;
+            $total_data = $statistics[$k]['total'] / 1073741824;
+            $statistics[$k]['total'] = number_format($total_data, 3);
         }
         array_multisort(array_column($statistics, 'total'), SORT_DESC, $statistics);
         return [
@@ -206,6 +208,7 @@ class StatController extends Controller
             if (isset($idIndexMap[$id])) {
                 $index = $idIndexMap[$id];
                 $data[$index]['total'] += $statistics[$k]['total'];
+                $data[$index]['total'] = number_format($data[$index]['total'],3);
             } else {
                 unset($statistics[$k]['server_rate']);
                 $data[] = $statistics[$k];
@@ -244,9 +247,10 @@ class StatController extends Controller
             $statistics[$k]['email'] = empty($user) ? "null" : $user['email'];
             $statistics[$k]['total'] = $statistics[$k]['total'] * $statistics[$k]['server_rate'] / 1073741824;
             if (isset($idIndexMap[$id])) {
-                
+
                 $index = $idIndexMap[$id];
                 $data[$index]['total'] += $statistics[$k]['total'];
+                $data[$index]['total'] = number_format($data[$index]['total'],3);
             } else {
                 unset($statistics[$k]['server_rate']);
                 $data[] = $statistics[$k];
